@@ -75,7 +75,7 @@ const candidatesSlice = createSlice({
 			const found = state.find(c => c.id === action.payload.candidateId);
 			if (found) found.answers.push(action.payload.answer);
 		},
-		finalize(state, action: PayloadAction<{ candidateId: string; finalScore: number; summary: string }>) {
+		finalize(state, action: PayloadAction<{ candidateId: string; finalScore: number | null; summary: string }>) {
 			const found = state.find(c => c.id === action.payload.candidateId);
 			if (found) {
 				found.finalScore = action.payload.finalScore;
@@ -85,6 +85,13 @@ const candidatesSlice = createSlice({
 		updateProfile(state, action: PayloadAction<{ candidateId: string; profile: Partial<CandidateProfile> }>) {
 			const found = state.find(c => c.id === action.payload.candidateId);
 			if (found) found.profile = { ...found.profile, ...action.payload.profile };
+		},
+		normalizeScores(state) {
+			for (const c of state) {
+				if (c.finalScore === 4) {
+					c.finalScore = null;
+				}
+			}
 		},
 	},
 });
@@ -101,7 +108,7 @@ const rootReducer = {
 };
 
 export const { setStatus, setCurrentCandidate, setCurrentIndex, setWelcomeBack, setTheme } = sessionSlice.actions;
-export const { createCandidate, appendChat, setQuestions, addAnswer, finalize, updateProfile } = candidatesSlice.actions;
+export const { createCandidate, appendChat, setQuestions, addAnswer, finalize, updateProfile, normalizeScores } = candidatesSlice.actions;
 
 export const store = configureStore({
 	reducer: persistReducer(rootPersistConfig, (state: any, action: any) => ({

@@ -26,7 +26,16 @@ const QUESTION_BANK: Record<Difficulty, string[]> = {
 }
 
 export function generateQuestions(): Question[] {
-	const pick = (arr: string[], n: number) => arr.slice(0, n)
+	const pick = (arr: string[], n: number) => {
+		const copy = arr.slice()
+		for (let i = copy.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1))
+			const tmp = copy[i]
+			copy[i] = copy[j]
+			copy[j] = tmp
+		}
+		return copy.slice(0, n)
+	}
 	const easy = pick(QUESTION_BANK.easy, 2)
 	const medium = pick(QUESTION_BANK.medium, 2)
 	const hard = pick(QUESTION_BANK.hard, 2)

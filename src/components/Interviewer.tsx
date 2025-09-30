@@ -1,4 +1,4 @@
-import { Card, Table, Input, Space, Typography, Drawer, Descriptions, Tag, List } from 'antd'
+import { Card, Table, Input, Space, Typography, Drawer, Descriptions, Tag, List, Progress } from 'antd'
 import { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import type { RootState } from '../store'
@@ -34,7 +34,9 @@ export default function Interviewer() {
 						{ title: 'Name', dataIndex: 'name' },
 						{ title: 'Email', dataIndex: 'email' },
 						{ title: 'Phone', dataIndex: 'phone' },
-						{ title: 'Score', dataIndex: 'score', sorter: (a: any, b: any) => (a.score || 0) - (b.score || 0) },
+						{ title: 'Score', dataIndex: 'score', sorter: (a: any, b: any) => (a.score || 0) - (b.score || 0), render: (val: number | string) => (typeof val === 'number' && val !== 4) ? (
+							<Progress className="score-circle" type="dashboard" percent={val} size={60} strokeColor={{ '0%': '#7F7CFF', '100%': '#70FFAF' }} />
+						) : '-' },
 					]}
 					dataSource={data}
 					onRow={(row) => ({ onClick: () => setOpenId(row.key) })}

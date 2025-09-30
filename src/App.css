@@ -1,5 +1,6 @@
 #root {
-  max-width: 1280px;
+  max-width: none;
+  width: 100%;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -43,9 +44,26 @@
 
 /* Desktop container for web layout */
 .container {
-	max-width: 1440px;
+	max-width: 1680px;
 	margin: 0 auto;
 	padding: 0 32px;
+}
+
+/* Vibrant gradient header */
+.app-header-gradient {
+	background: linear-gradient(135deg, #7F7CFF, #00D4FF 40%, #70FFAF);
+	background-size: 200% 200%;
+	animation: gradientShift 12s ease infinite;
+	color: white;
+	font-weight: 700;
+	letter-spacing: 0.2px;
+	box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+}
+
+@keyframes gradientShift {
+	0% { background-position: 0% 50%; }
+	50% { background-position: 100% 50%; }
+	100% { background-position: 0% 50%; }
 }
 
 /* Smooth transitions */
@@ -76,6 +94,17 @@
 	font-weight: 600;
 }
 
+/* Sliding underline for tabs via ink bar */
+.tabs-vibrant .ant-tabs-ink-bar {
+	height: 3px;
+	background: linear-gradient(90deg, #7F7CFF, #00D4FF, #70FFAF);
+	border-radius: 999px;
+	transition: transform 300ms ease, width 300ms ease, left 300ms ease;
+}
+.tabs-vibrant .ant-tabs-tab:hover .ant-tabs-tab-btn {
+	text-shadow: 0 0 24px rgba(127,124,255,0.4);
+}
+
 /* Table row hover */
 .ant-table-tbody > tr:hover > td {
 	background: rgba(0, 0, 0, 0.02);
@@ -93,6 +122,13 @@
 	background: rgba(22,119,255,0.04);
 }
 
+/* Upload glow on dragover */
+.drag-glow {
+	box-shadow: 0 0 0 3px rgba(0,212,255,0.25), 0 0 24px rgba(0,212,255,0.35) inset !important;
+	border-color: transparent !important;
+	background: radial-gradient(1200px 1200px at var(--x,50%) var(--y,50%), rgba(0,212,255,0.08), transparent 60%);
+}
+
 /* Input focus glow */
 .ant-input:focus, .ant-input-affix-wrapper-focused, .ant-input-focused, textarea.ant-input:focus {
 	box-shadow: 0 0 0 3px rgba(22,119,255,0.15);
@@ -107,3 +143,41 @@
 .ant-drawer-content-wrapper {
 	box-shadow: 0 10px 30px rgba(0,0,0,0.18);
 }
+
+/* Theme toggle micro animation */
+.theme-toggle-label {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+.theme-icon {
+	display: inline-block;
+	transform-origin: center;
+	transition: transform 300ms ease, opacity 300ms ease;
+}
+.theme-icon.sun { color: #FFD66B; }
+.theme-icon.moon { color: #b3c7ff; }
+
+/* Confetti effect */
+.confetti-container {
+	position: fixed;
+	pointer-events: none;
+	left: 0; right: 0; top: 0; bottom: 0;
+	overflow: hidden;
+}
+.confetti-piece {
+	position: absolute;
+	width: 10px; height: 16px;
+	background: linear-gradient(135deg, #7F7CFF, #00D4FF);
+	opacity: 0.9;
+	border-radius: 2px;
+	animation: confettiFall 1400ms ease-out forwards;
+}
+@keyframes confettiFall {
+	0% { transform: translateY(-20vh) rotate(0deg); opacity: 0; }
+	10% { opacity: 1; }
+	100% { transform: translateY(110vh) rotate(540deg); opacity: 0; }
+}
+
+/* Circular score size tweak */
+.score-circle .ant-progress-text { font-weight: 600; }

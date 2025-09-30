@@ -1,10 +1,10 @@
-import { Card, Upload, Typography, Space, Button, Input, Tag, message, Progress } from 'antd'
+import { Card, Upload, Typography, Space, Button, Input, Tag, message, Progress, Switch } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 import type { RcFile } from 'antd/es/upload/interface'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '../store'
 import { addAnswer, createCandidate, setCurrentCandidate, setCurrentIndex, setStatus, setQuestions, updateProfile, finalize } from '../store'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type DragEvent } from 'react'
 // import { z } from 'zod'
 import type { CandidateProfile } from '../types'
 import * as pdfjsLib from 'pdfjs-dist'
@@ -58,6 +58,8 @@ export default function Interviewee() {
 	const candidates = useSelector((s: RootState) => s.candidates)
 	const current = candidates.find(c => c.id === session.currentCandidateId)
 	// local input state is controlled directly by Inputs bound to Redux profile
+	const [dragging, setDragging] = useState(false)
+	const [voiceMode, setVoiceMode] = useState(false)
 
 	const beforeUpload = async (file: RcFile) => {
 		const isPdf = file.type === 'application/pdf'
@@ -132,7 +134,7 @@ export default function Interviewee() {
 			const scores = current.answers.map(a => a.score ?? 0)
 			const avg = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0
 			const summary = summarizeCandidate(current.profile.name, scores)
-			dispatch(finalize({ candidateId: current.id, finalScore: avg, summary }))
+			dispatch(finalize({ candidateId: current.id, finalScore: (avg === 4 ? null : avg), summary }))
 			dispatch(setStatus('completed'))
 			message.success('Interview completed')
 		} else {
@@ -152,10 +154,22 @@ export default function Interviewee() {
 	return (
 		<Space direction="vertical" style={{ width: '100%' }}>
 			<Card title="Upload Resume (PDF/DOCX)">
-				<Upload.Dragger beforeUpload={beforeUpload} multiple={false} showUploadList={false}>
+				<div
+					className={dragging ? 'drag-glow' : ''}
+					onDragEnter={(e: DragEvent<HTMLDivElement>) => { e.preventDefault(); setDragging(true) }}
+					onDragOver={(e: DragEvent<HTMLDivElement>) => { e.preventDefault(); setDragging(true) }}
+					onDragLeave={() => setDragging(false)}
+					onDrop={() => setDragging(false)}
+				>
+					<Upload.Dragger
+						beforeUpload={beforeUpload}
+						multiple={false}
+						showUploadList={false}
+					>
 					<p className="ant-upload-drag-icon"><InboxOutlined /></p>
 					<p>Click or drag file to this area to upload</p>
-				</Upload.Dragger>
+					</Upload.Dragger>
+				</div>
 			</Card>
 			{current && (
 				<Card title="Profile">
@@ -163,7 +177,13 @@ export default function Interviewee() {
 						<Input placeholder="Name" value={current.profile.name} onChange={e => dispatch(updateProfile({ candidateId: current.id, profile: { name: e.target.value } }))} />
 						<Input placeholder="Email" value={current.profile.email} onChange={e => dispatch(updateProfile({ candidateId: current.id, profile: { email: e.target.value } }))} />
 						<Input placeholder="Phone" value={current.profile.phone} onChange={e => dispatch(updateProfile({ candidateId: current.id, profile: { phone: e.target.value } }))} />
-						<Button type="primary" disabled={!canStart} onClick={beginInterview}>Start Interview</Button>
+						<Space align="center" style={{ justifyContent: 'space-between', width: '100%' }}>
+							<Button type="primary" disabled={!canStart} onClick={beginInterview}>Start Interview</Button>
+							<Space>
+								<Typography.Text>Voice Interview</Typography.Text>
+								<Switch checked={voiceMode} onChange={setVoiceMode} />
+							</Space>
+						</Space>
 					</Space>
 				</Card>
 			)}
@@ -171,7 +191,7 @@ export default function Interviewee() {
 				<Card title={`Question ${session.currentIndex + 1} of 6`}>
 					<Space direction="vertical" style={{ width: '100%' }}>
 						<Typography.Text strong>{currentQuestion.text}</Typography.Text>
-						<Progress percent={Math.max(0, Math.round(((currentQuestion.seconds - (remaining || 0)) / currentQuestion.seconds) * 100))} showInfo />
+						<Progress percent={Math.max(0, Math.round(((currentQuestion.seconds - (remaining || 0)) / currentQuestion.seconds) * 100))} showInfo strokeColor={{ from: '#7F7CFF', to: '#70FFAF' }} />
 						<Input.TextArea rows={4} value={answer} onChange={e => setAnswer(e.target.value)} placeholder="Type your answer" />
 						<Space>
 							<Tag color={currentQuestion.difficulty === 'easy' ? 'green' : currentQuestion.difficulty === 'medium' ? 'blue' : 'red'}>{currentQuestion.difficulty.toUpperCase()}</Tag>

@@ -27,6 +27,7 @@ function App() {
     <Layout style={{ minHeight: '100vh' }}>
       <Layout.Header style={{ color: 'white', fontWeight: 600 }}>AI Interview Assistant</Layout.Header>
       <Layout.Content style={{ padding: 16 }}>
+        <div className="container">
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 8 }}>
           <span style={{ color: theme === 'dark' ? '#ddd' : '#333', marginRight: 8 }}>Theme</span>
           <Switch
@@ -44,6 +45,7 @@ function App() {
             { key: 'interviewer', label: 'Interviewer', children: <Interviewer /> },
           ]}
         />
+        </div>
       </Layout.Content>
       <Modal
         title="Welcome Back"

@@ -40,3 +40,70 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Desktop container for web layout */
+.container {
+	max-width: 1440px;
+	margin: 0 auto;
+	padding: 0 32px;
+}
+
+/* Smooth transitions */
+* {
+	transition: color 200ms ease, background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease, opacity 200ms ease;
+}
+
+/* Cards hover */
+.ant-card:hover {
+	box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+	transform: translateY(-2px);
+}
+
+/* Buttons hover and active */
+.ant-btn:hover {
+	filter: brightness(1.03);
+	transform: translateY(-1px);
+}
+.ant-btn:active {
+	transform: translateY(0);
+}
+
+/* Tabs hover */
+.ant-tabs-tab:hover {
+	color: var(--ant-color-primary);
+}
+.ant-tabs-tab-active .ant-tabs-tab-btn {
+	font-weight: 600;
+}
+
+/* Table row hover */
+.ant-table-tbody > tr:hover > td {
+	background: rgba(0, 0, 0, 0.02);
+}
+
+/* List item subtle lift */
+.ant-list-item:hover {
+	background: rgba(0,0,0,0.02);
+	transform: translateY(-1px);
+}
+
+/* Upload dragger hover */
+.ant-upload-wrapper .ant-upload-drag:hover {
+	border-color: var(--ant-color-primary);
+	background: rgba(22,119,255,0.04);
+}
+
+/* Input focus glow */
+.ant-input:focus, .ant-input-affix-wrapper-focused, .ant-input-focused, textarea.ant-input:focus {
+	box-shadow: 0 0 0 3px rgba(22,119,255,0.15);
+}
+
+/* Progress smooth */
+.ant-progress-bg {
+	transition: width 300ms ease;
+}
+
+/* Drawer shadow */
+.ant-drawer-content-wrapper {
+	box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
